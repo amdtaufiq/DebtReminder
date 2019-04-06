@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Debt Reminder</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Tika Marita</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+
+    <string name="statistical_chart">Statistical Chart</string>
+    <string name="data_synchronization">Data Synchronization</string>
+    <string name="settings">Settings</string>
+    <string name="about_us">About Us</string>
+    <string name="logout">Logout</string>
+    <string name="filter">Filter</string>
+    <string name="jumlah_yang_dibayar">Jumlah yang Dibayar</string>
+    <string name="sisa_pinjaman">Sisa Pinjaman</string>
+    <string name="jumlah_pinjaman_total">Jumlah Pinjaman Total</string>
+    <string name="sentuh">Sentuh untuk melihat laporan lengkap</string>
+    <string name="overview">Overview</string>
+
+</resources>
