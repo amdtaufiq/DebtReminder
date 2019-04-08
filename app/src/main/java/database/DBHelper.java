@@ -30,7 +30,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 "datePay DATETIME,"+
                 "pay INTEGER,"+
                 "description TEXT)";
-//                "FOREIGN KEY(idPeminjaman) REFERENCES peminjaman(idPeminjaman))";
 
         sqLiteDatabase.execSQL(peminjaman);
         sqLiteDatabase.execSQL(pembayaran);

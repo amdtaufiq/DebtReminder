@@ -8,14 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import org.d3ifcool.debtreminder.EditDeletePeminjamanActivity;
 import org.d3ifcool.debtreminder.R;
-
 import java.util.ArrayList;
-
 import entities.Pembayaran;
-import entities.Peminjaman;
 
 public class PembayaranListAdapter extends RecyclerView.Adapter<PembayaranListAdapter.viewHolder>{
     private Context mContext;
@@ -36,17 +32,7 @@ public class PembayaranListAdapter extends RecyclerView.Adapter<PembayaranListAd
     @Override
     public void onBindViewHolder(@NonNull viewHolder viewHolder, int i) {
         final Pembayaran pembayaran = listPembayaran.get(i);
-//        final Peminjaman peminjaman = new Peminjaman();
-//        final Intent intent = Intent.getIntent();
-//        peminjaman = (Peminjaman) intent.getSerializableExtra("peminjaman");
 
-//        peminjaman.setIdPeminjaman(peminjaman.getIdPeminjaman());
-//        peminjaman.setAmount(peminjaman.getAmount());
-//        peminjaman.setName(peminjaman.getName());
-//        peminjaman.setTelphon(peminjaman.getTelphon());
-//        peminjaman.setDescription(peminjaman.getDescription());
-//        peminjaman.setDateOfLoan(peminjaman.getDateOfLoan());
-//        peminjaman.setDateDue(peminjaman.getDateDue());
         viewHolder.tvPay.setText(String.valueOf(pembayaran.getPay()));
         viewHolder.tvDatePay.setText(pembayaran.getDatePay());
         viewHolder.tvDescription.setText(pembayaran.getDescription());
@@ -56,19 +42,15 @@ public class PembayaranListAdapter extends RecyclerView.Adapter<PembayaranListAd
             public void onClick(View view) {
                 Intent intent = new Intent(mContext,EditDeletePeminjamanActivity.class);
                 intent.putExtra("pembayaran", pembayaran);
-//                intent.putExtra("peminjaman", peminjaman);
                 mContext.startActivity(intent);
             }
         });
     }
 
-
-
     @Override
     public int getItemCount() {
         return listPembayaran.size();
     }
-
 
     class viewHolder extends RecyclerView.ViewHolder {
         TextView tvPay;

@@ -4,10 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -78,30 +74,6 @@ public class FunctionPeminjaman {
             return rows>0;
         }catch (Exception ex){
             return false;
-        }
-    }
-
-
-
-    public Peminjaman find(int idPeminjaman){
-        try {
-            SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
-            Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM peminjaman WHERE idPeminjaman = ?", new String[]{String.valueOf(idPeminjaman)});
-            Peminjaman peminjaman = null;
-            if (cursor.moveToFirst()){
-                peminjaman = new Peminjaman();
-                peminjaman.setIdPeminjaman(cursor.getInt(0));
-                peminjaman.setName(cursor.getString(1));
-                peminjaman.setTelphon(cursor.getString(2));
-                peminjaman.setAmount(cursor.getInt(3));
-                peminjaman.setDescription(cursor.getString(4));
-                peminjaman.setDateOfLoan(cursor.getString(5));
-                peminjaman.setDateDue(cursor.getString(6));
-            }
-            sqLiteDatabase.close();
-            return peminjaman;
-        }catch (Exception ex){
-            return null;
         }
     }
 

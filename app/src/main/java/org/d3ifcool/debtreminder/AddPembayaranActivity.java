@@ -3,16 +3,12 @@ package org.d3ifcool.debtreminder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import entities.Pembayaran;
@@ -28,6 +24,9 @@ public class AddPembayaranActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_pembayaran);
 
+        // TODO: 08/04/2019 back button 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        
         mEtPayment = findViewById(R.id.et_payment_add_pembayaran);
         mEtDescription = findViewById(R.id.et_description_add_pembayaran);
 
@@ -81,7 +80,7 @@ public class AddPembayaranActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_add_pembayaran,menu);
+        getMenuInflater().inflate(R.menu.menu_pembayaran_detail,menu);
         return true;
     }
 

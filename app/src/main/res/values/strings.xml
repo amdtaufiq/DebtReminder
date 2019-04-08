@@ -18,5 +18,22 @@
     <string name="jumlah_pinjaman_total">Jumlah Pinjaman Total</string>
     <string name="sentuh">Sentuh untuk melihat laporan lengkap</string>
     <string name="overview">Overview</string>
+    <string name="nama">Nama</string>
+    <string name="_0876545336">0876545336</string>
+    <string name="deskripsi">Deskripsi...</string>
+    <string name="borrow_rp5000_00">Borrow Rp5000,00</string>
+    <string name="since">Date of Loan</string>
+    <string name="due_date">Due Date</string>
+    <string name="total">Total :</string>
+    <string name="details">Details</string>
+    <string name="full_name">Full Name</string>
+    <string name="description">Description</string>
+    <string name="_12_03_2019">Mar 12, 2019</string>
+    <string name="_15_03_2019">Mar 15, 2019</string>
+    <string name="remaining">Remaining (Rp)</string>
+    <string name="rp_0">Rp 0</string>
+    <string name="total_lend_amount_rp">Total Lend Amount (Rp)</string>
+    <string name="collected_rp">Collected (Rp)</string>
+    <string name="_0">0</string>
 
 </resources>

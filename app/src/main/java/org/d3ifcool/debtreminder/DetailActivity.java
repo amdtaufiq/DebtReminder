@@ -4,12 +4,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -32,24 +36,17 @@ public class DetailActivity extends AppCompatActivity {
     private TextView mDescription;
     private TextView mDateOfLand;
     private TextView mDateDue;
-
-    private Button mBtnDetailDelete;
-    private Button mBtnDetailUpdate;
-    private Button mBtnDetailPay;
-
     private RecyclerView recyclerView;
-
     private DBHelper mDbHelper = new DBHelper(this);
     private Cursor mCursor;
     private int mPayment;
     private TextView mTvPayment;
-
-
+    private Peminjaman peminjaman;
 
     @Override
     protected void onStart() {
         super.onStart();
-        Peminjaman peminjaman = (Peminjaman) getIntent().getSerializableExtra("peminjaman");
+        peminjaman = (Peminjaman) getIntent().getSerializableExtra("peminjaman");
 
         SQLiteDatabase sqLiteDatabase = mDbHelper.getWritableDatabase();
         sqLiteDatabase.isOpen();
@@ -64,20 +61,6 @@ public class DetailActivity extends AppCompatActivity {
 
         mTvPayment = findViewById(R.id.tv_payment);
         mTvPayment.setText("Total : "+mPayment);
-
-
-        mAmount = findViewById(R.id.tv_detail_amount);
-        mAmount.setText(String.valueOf(peminjaman.getAmount()));
-        mName = findViewById(R.id.tv_detail_name);
-        mName.setText(peminjaman.getName());
-        mPhone = findViewById(R.id.tv_detail_telphon);
-        mPhone.setText(peminjaman.getTelphon());
-        mDescription = findViewById(R.id.tv_detail_description);
-        mDescription.setText(peminjaman.getDescription());
-        mDateOfLand = findViewById(R.id.tv_detail_dl);
-        mDateOfLand.setText(peminjaman.getDateOfLoan());
-        mDateDue = findViewById(R.id.tv_detail_dd);
-        mDateDue.setText(peminjaman.getDateDue());
     }
 
     @Override
@@ -85,20 +68,90 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        final Peminjaman peminjaman = (Peminjaman) getIntent().getSerializableExtra("peminjaman");
+        // TODO: 08/04/2019 back button 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        
+        final Intent intent = getIntent();
+        peminjaman = (Peminjaman) intent.getSerializableExtra("peminjaman");
 
-        mBtnDetailDelete = findViewById(R.id.btn_detail_delete);
-        mBtnDetailDelete.setOnClickListener(new View.OnClickListener() {
+        mName = findViewById(R.id.tv_detail_name);
+        mName.setText(peminjaman.getName());
+        mAmount = findViewById(R.id.tv_detail_amount);
+        mAmount.setText(String.valueOf(peminjaman.getAmount()));
+        mDescription = findViewById(R.id.tv_detail_description);
+        mDescription.setText(peminjaman.getDescription());
+        mDateOfLand = findViewById(R.id.tv_detail_dl);
+        mDateOfLand.setText(peminjaman.getDateOfLoan());
+        mDateDue = findViewById(R.id.tv_detail_dd);
+        mDateDue.setText(peminjaman.getDateDue());
+
+        recyclerView = findViewById(R.id.rv_payment);
+        FunctionPembayaran functionPembayaran =  new FunctionPembayaran(this);
+        ArrayList<Pembayaran> listPembayaran = new ArrayList<>();
+        listPembayaran.addAll(functionPembayaran.findIdPeminjaman(peminjaman.getIdPeminjaman()));
+        PembayaranListAdapter adapter = new PembayaranListAdapter(this,listPembayaran);
+        recyclerView.setAdapter(adapter);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+
+        DividerItemDecoration divider = new DividerItemDecoration(this,layoutManager.getOrientation());
+        recyclerView.addItemDecoration(divider);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_debt_detail, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_call:
+                call();
+                break;
+            case R.id.action_edit:
+                editPeminjaman();
+                break;
+            case R.id.action_delete:
+                deletePeminjaman();
+                break;
+            case R.id.action_add_payment:
+                payAmount();
+                break;
+                default:
+                    new IllegalArgumentException("Upslala");
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void editPeminjaman(){
+        peminjaman = (Peminjaman) getIntent().getSerializableExtra("peminjaman");
+        peminjaman.setIdPeminjaman(peminjaman.getIdPeminjaman());
+        peminjaman.setAmount(peminjaman.getAmount());
+        peminjaman.setName(peminjaman.getName());
+        peminjaman.setTelphon(peminjaman.getTelphon());
+        peminjaman.setDescription(peminjaman.getDescription());
+        peminjaman.setDateOfLoan(peminjaman.getDateOfLoan());
+        peminjaman.setDateDue(peminjaman.getDateDue());
+
+        Intent intentEdit = new Intent(DetailActivity.this, EditPeminjamanActivity.class);
+        intentEdit.putExtra("peminjaman",peminjaman);
+        startActivity(intentEdit);
+    }
+
+    public void deletePeminjaman(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setTitle("Confirm");
+        builder.setMessage("Are you sure?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setCancelable(false);
-                builder.setTitle("Confirm");
-                builder.setMessage("Are you sure?");
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        FunctionPeminjaman functionPeminjaman = new FunctionPeminjaman(getBaseContext());
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    FunctionPeminjaman functionPeminjaman = new FunctionPeminjaman(getBaseContext());
                         if (functionPeminjaman.delete(peminjaman.getIdPeminjaman())){
                             Intent intentDelete = new Intent(DetailActivity.this,MainActivity.class);
                             startActivity(intentDelete);
@@ -114,51 +167,36 @@ public class DetailActivity extends AppCompatActivity {
                             });
                             builderDeleteInformation.create().show();
                         }
-                    }
-                });
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
-                builder.create().show();
-            }
+                }
         });
-
-        mBtnDetailUpdate = findViewById(R.id.btn_detail_update);
-        mBtnDetailUpdate.setOnClickListener(new View.OnClickListener() {
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intentEdit = new Intent(DetailActivity.this, EditPeminjamanActivity.class);
-                intentEdit.putExtra("peminjaman",peminjaman);
-                startActivity(intentEdit);
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.cancel();
             }
         });
+        builder.create().show();
+    }
 
-        mBtnDetailPay = findViewById(R.id.btn_detail_pay);
-        mBtnDetailPay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intentPay = new Intent(DetailActivity.this, AddPembayaranActivity.class);
-                intentPay.putExtra("peminjaman",peminjaman);
-                startActivity(intentPay);
-            }
-        });
+    public void payAmount(){
+        peminjaman = (Peminjaman) getIntent().getSerializableExtra("peminjaman");
+        peminjaman.setIdPeminjaman(peminjaman.getIdPeminjaman());
+        peminjaman.setAmount(peminjaman.getAmount());
+        peminjaman.setName(peminjaman.getName());
+        peminjaman.setTelphon(peminjaman.getTelphon());
+        peminjaman.setDescription(peminjaman.getDescription());
+        peminjaman.setDateOfLoan(peminjaman.getDateOfLoan());
+        peminjaman.setDateDue(peminjaman.getDateDue());
 
+        Intent intentPay = new Intent(DetailActivity.this, AddPembayaranActivity.class);
+        intentPay.putExtra("peminjaman",peminjaman);
+        startActivity(intentPay);
+    }
 
-        recyclerView = findViewById(R.id.rv_payment);
-        FunctionPembayaran functionPembayaran =  new FunctionPembayaran(this);
-        ArrayList<Pembayaran> listPembayaran = new ArrayList<>();
-        listPembayaran.addAll(functionPembayaran.findIdPeminjaman(peminjaman.getIdPeminjaman()));
-        PembayaranListAdapter adapter = new PembayaranListAdapter(this,listPembayaran);
-        recyclerView.setAdapter(adapter);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-
-        DividerItemDecoration divider = new DividerItemDecoration(this,layoutManager.getOrientation());
-        recyclerView.addItemDecoration(divider);
+    public void call(){
+        peminjaman = (Peminjaman) getIntent().getSerializableExtra("peminjaman");
+        String phoneNumber = peminjaman.getTelphon();
+        Intent dialPhoneNumber = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+phoneNumber));
+        startActivity(dialPhoneNumber);
     }
 }

@@ -7,14 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
 import org.d3ifcool.debtreminder.DetailActivity;
 import org.d3ifcool.debtreminder.R;
-
 import java.util.ArrayList;
-
 import entities.Peminjaman;
 
 public class PeminjamanListAdapter extends RecyclerView.Adapter<PeminjamanListAdapter.ViewHolder> {
@@ -39,15 +35,12 @@ public class PeminjamanListAdapter extends RecyclerView.Adapter<PeminjamanListAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
         final Peminjaman peminjaman = listPeminjaman.get(i);
-//        viewHolder.idPeminjaman.setText(String.valueOf(peminjaman.getIdPeminjaman()));
-//        viewHolder.idPeminjaman.setVisibility(View.GONE);
         viewHolder.text_view_nama_peminjam.setText(peminjaman.getName());
         viewHolder.text_view__nomor.setText(peminjaman.getTelphon());
         viewHolder.text_view__hutang.setText(String.valueOf(peminjaman.getAmount()));
         viewHolder.text_view__keterangan.setText(peminjaman.getDescription());
         viewHolder.text_view__tanggal_pinjam.setText(peminjaman.getDateOfLoan());
         viewHolder.text_view__batas_tanggal.setText(peminjaman.getDateDue());
-
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +67,6 @@ public class PeminjamanListAdapter extends RecyclerView.Adapter<PeminjamanListAd
             text_view__hutang = itemView.findViewById(R.id.text_view_hutang);
             text_view__tanggal_pinjam = itemView.findViewById(R.id.text_view_tanggal_pinjam);
             text_view__batas_tanggal = itemView.findViewById(R.id.text_view_batas_tanggal);
-//            idPeminjaman = itemView.findViewById(R.id.idPeminjaman);
         }
     }
 }

@@ -9,63 +9,43 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import entities.Pembayaran;
-import entities.Peminjaman;
 import function.FunctionPembayaran;
-import function.FunctionPeminjaman;
 
 public class EditDeletePeminjamanActivity extends AppCompatActivity {
 
     private EditText mEtPayment;
     private  EditText mEtDescription;
-    Pembayaran pembayaran;
-    Peminjaman peminjaman;
-
+    private Pembayaran pembayaran;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_delete_peminjaman);
 
-        pembayaran = (Pembayaran) getIntent().getSerializableExtra("pembayaran");
-        peminjaman = (Peminjaman) getIntent().getSerializableExtra("peminjaman");
+        // TODO: 08/04/2019 back button
+        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
 
-//        Peminjaman peminjaman = (Peminjaman) getIntent().getSerializableExtra("peminjaman");
+        pembayaran = (Pembayaran) getIntent().getSerializableExtra("pembayaran");
         mEtPayment = findViewById(R.id.et_payment_pembayaran);
         mEtPayment.setText(String.valueOf(pembayaran.getPay()));
         mEtDescription = findViewById(R.id.et_description_pembayaran);
         mEtDescription.setText(pembayaran.getDescription());
-
-        TextView tv = findViewById(R.id.tv_);
-        tv.setText(pembayaran.getDescription());
-
     }
 
-    private void update(){
-        peminjaman = (Peminjaman) getIntent().getSerializableExtra("peminjaman");
-
-//      peminjaman.setIdPeminjaman(peminjaman.getIdPeminjaman());
-//        peminjaman.setAmount(peminjaman.getAmount());
-//        peminjaman.setName(peminjaman.getName());
-//        peminjaman.setTelphon(peminjaman.getTelphon());
-//        peminjaman.setDescription(peminjaman.getDescription());
-//        peminjaman.setDateOfLoan(peminjaman.getDateOfLoan());
-//        peminjaman.setDateDue(peminjaman.getDateDue());
-
+    private void updatePayment(){
         pembayaran = (Pembayaran) getIntent().getSerializableExtra("pembayaran");
         FunctionPembayaran bayar = new FunctionPembayaran(getBaseContext());
         pembayaran.setPay(Integer.parseInt(mEtPayment.getText().toString().trim()));
         pembayaran.setDescription(mEtDescription.getText().toString().trim());
-        if (TextUtils.isEmpty(mEtPayment.getText())||TextUtils.isEmpty(mEtDescription.getText())){
+        if (TextUtils.isEmpty(mEtPayment.getText())||
+                TextUtils.isEmpty(mEtDescription.getText())){
             Toast.makeText(this, "please completed", Toast.LENGTH_SHORT).show();
         }else if (bayar.Update(pembayaran)){
             Intent intent = new Intent(this,DetailActivity.class);
-            Toast.makeText(this, "success", Toast.LENGTH_SHORT).show();
             intent.putExtra("pembayaran", pembayaran);
-            intent.putExtra("peminjaman", peminjaman);
+            Toast.makeText(this, "success", Toast.LENGTH_SHORT).show();
             startActivity(intent);
         }else {
             AlertDialog.Builder builder = new AlertDialog.Builder(EditDeletePeminjamanActivity.this);
@@ -81,18 +61,8 @@ public class EditDeletePeminjamanActivity extends AppCompatActivity {
         }
     }
 
-    private void Delete(){
+    private void deletePayment(){
         pembayaran = (Pembayaran) getIntent().getSerializableExtra("pembayaran");
-        peminjaman = (Peminjaman) getIntent().getSerializableExtra("peminjaman");
-
-//        peminjaman.setIdPeminjaman(peminjaman.getIdPeminjaman());
-//        peminjaman.setAmount(peminjaman.getAmount());
-//        peminjaman.setName(peminjaman.getName());
-//        peminjaman.setTelphon(peminjaman.getTelphon());
-//        peminjaman.setDescription(peminjaman.getDescription());
-//        peminjaman.setDateOfLoan(peminjaman.getDateOfLoan());
-//        peminjaman.setDateDue(peminjaman.getDateDue());
-
         AlertDialog.Builder builder = new AlertDialog.Builder(EditDeletePeminjamanActivity.this);
         builder.setCancelable(false);
         builder.setTitle("Confirm");
@@ -104,8 +74,6 @@ public class EditDeletePeminjamanActivity extends AppCompatActivity {
                 if (bayar.delete(pembayaran.getIdPembayaran())){
                     Intent intentDelete = new Intent(EditDeletePeminjamanActivity.this,DetailActivity.class);
                     Toast.makeText(EditDeletePeminjamanActivity.this, "success", Toast.LENGTH_SHORT).show();
-                    intentDelete.putExtra("peminjaman",peminjaman);
-                    intentDelete.putExtra("pembayaran",pembayaran);
                     startActivity(intentDelete);
                 }else {
                     AlertDialog.Builder builderDeleteInformation = new AlertDialog.Builder(getBaseContext());
@@ -144,17 +112,13 @@ public class EditDeletePeminjamanActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_save:
-                update();
-                finish();
-                return true;
+                updatePayment();
+                break;
             case R.id.action_delete:
-                Delete();
-//                finish();
-                return true;
-            case R.id.home:
-                back();
-                finish();
-                return true;
+                deletePayment();
+                break;
+            default:
+                new IllegalArgumentException("Ups!!");
         }
         return super.onOptionsItemSelected(item);
     }
